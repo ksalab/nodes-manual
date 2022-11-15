@@ -1,4 +1,4 @@
-# ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "GITOPIA") GITOPIA
+# ![alt text](https://raw.githubusercontent.com/ksalab/nodes/main/logo/gitopia-logo-white.svg "GITOPIA") GITOPIA
 
 ### add env
 
