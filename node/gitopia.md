@@ -133,6 +133,26 @@ source $HOME/.bash_profile
 gitopiad status 2>&1 | jq .SyncInfo
 ```
 
+## Snapshot
+
+### Stop the service and reset the data
+```bash
+sudo systemctl stop gitopiad
+cp $HOME/.gitopia/data/priv_validator_state.json $HOME/.gitopia/priv_validator_state.json.backup
+rm -rf $HOME/.gitopia/data
+```
+
+### Download latest snapshot
+```bash
+curl -L https://snapshots.kjnodes.com/gitopia-testnet/snapshot_latest.tar.lz4 | lz4 -dc - | tar -xf - -C $HOME/.gitopia
+mv $HOME/.gitopia/priv_validator_state.json.backup $HOME/.gitopia/data/priv_validator_state.json
+```
+
+### Restart the service and check the log
+```bash
+sudo systemctl start gitopiad && journalctl -u gitopiad -f --no-hostname -o cat
+```
+
 ## Create wallet (or use existing wallet - Keplr)
 
 ### (Please save all keys on your notepad)
