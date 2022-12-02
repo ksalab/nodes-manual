@@ -4,7 +4,7 @@
 
 ```bash
 echo '# GITOPIA section start' >> $HOME/.bash_profile
-GITOPIA_NODENAME=ksalab
+GITOPIA_NODENAME=node_name
 echo 'export GITOPIA_NODENAME='$GITOPIA_NODENAME >> $HOME/.bash_profile
 GITOPIA_NUM=2
 echo "export GITOPIA_WALLET=wallet" >> $HOME/.bash_profile
