@@ -9,7 +9,7 @@ echo 'export DYMENSION_NODENAME='$DYMENSION_NODENAME >> $HOME/.bash_profile
 DYMENSION_NUM=2
 echo "export DYMENSION_WALLET=wallet" >> $HOME/.bash_profile
 echo "export DYMENSION_CHAIN_ID=local-testnet" >> $HOME/.bash_profile
-echo "export DYMENSION_PORT=${DYMENSION_PORT}" >> $HOME/.bash_profile
+echo "export DYMENSION_PORT=${DYMENSION_NUM}" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 ```
 
