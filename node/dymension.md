@@ -1,6 +1,6 @@
 # ![alt text](https://raw.githubusercontent.com/ksalab/nodes/main/logo/dymension.png "DYMENSION")
 
-### add env
+### 1) add env
 
 ```bash
 echo '# DYMENSION section start' >> $HOME/.bash_profile
@@ -13,7 +13,7 @@ echo "export DYMENSION_PORT=${DYMENSION_NUM}" >> $HOME/.bash_profile
 source $HOME/.bash_profile
 ```
 
-### install go
+### 2) install go
 
 ```bash
 ver="1.19.5"
@@ -26,12 +26,12 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
-### check version go
+#### check version go
 ```bash
 go version
 ```
 
-### install binaries
+### 3) install binaries
 
 #### clone dymension
 ```bash
@@ -51,4 +51,11 @@ should return "latest". If the dymd command is not found an error message is ret
 export PATH=$PATH:$(go env GOPATH)/bin
 ````
 
-### download and build binaries
+### 4) initializing dymd
+Set the following variables:
+````bash
+export CHAIN_ID="local-testnet"
+export KEY_NAME="local-user"
+export MONIKER_NAME="local"
+````
+
