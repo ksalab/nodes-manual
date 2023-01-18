@@ -26,9 +26,29 @@ echo "export PATH=$PATH:/usr/local/go/bin:$HOME/go/bin" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
-### install git remote helper
+### check version go
 ```bash
-curl https://get.gitopia.com | bash
+go version
 ```
+
+### install binaries
+
+#### clone dymension
+```bash
+git clone https://github.com/dymensionxyz/dymension.git --branch v0.1.0-alpha
+cd dymension
+make install
+```
+
+#### check that the dymd binaries have been successfully installed
+````bash
+dymd version
+````
+
+should return "latest". If the dymd command is not found an error message is returned, confirm that your [GOPATH](https://go.dev/doc/gopath_code#GOPATH) is correctly configured by running the following command
+
+````bash
+export PATH=$PATH:$(go env GOPATH)/bin
+````
 
 ### download and build binaries
