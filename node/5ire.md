@@ -105,4 +105,53 @@ Validators are crucial to the security & upkeep of the network, as they validate
 
 Before proceeding, ensure that you have successfully set up your 5ire Validator Node. The link for instructions on how to do this is given below:
 
-[How to setup a 5ireChain Node]()
+[How to setup a 5ireChain Node](https://github.com/ksalab/nodes-manual/blob/main/node/5ire.md#installation-process)
+
+### Who are validators
+A validator is a participant in a 5irechain consensus (POF) that is responsible for maintaining the security of the distributed ledger by validating transactions and adding them to the 5ireChain. They are in charge of creating new blocks, as well as ensuring the network's finality and, ultimately, its security.
+
+Validators are incentivized to participate in the network through the use of a native cryptocurrency (5ire in our chain) and are required to "stake" a certain amount (Min. 200 5IRE in our case) of coins to become a validator.
+
+The stake acts as a guarantee of good conduct, and whenever they make a mistake, this stake is slashed. In contrast, when they follow the rules, they are rewarded according to their contribution.
+
+It is important to note that being a validator on a live network comes with a significant level of responsibility. Not only is the validator responsible for their own stake, but they are also responsible for the stake of their nominators. Any mistakes made by the validator can result in a slashing of stake amount and reputation.
+
+## What are the minimum requirements to become a validator?
+
+### Stake
+
+The minimum requirement to become a validator on the 5ireChain is 200 5ire coins. This means that as a minimum, you will need enough 5ire coins to set up as a validator plus a little extra for transaction fees. The rest can come from nominators.
+
+Note: The minimum stake of 200 5ire is required for 5irechain testnet network - Thunder
+
+### Validator Node
+
+It is mandatory to set up your 5irechain Validator Node to be a validator. Please follow this link to set up your node.
+
+In case you already have a 5irechain valdiator node setup, please proceed this document for further instructions.
+
+### Validator Application
+
+You must access the Validator Application to become a Validator.
+
+[5irechain valdiator application link](https://validator.5ire.network)
+
+You will be redirected to the application by clicking the provided link where you must enter their “Node Information” into the node information input field in order to establish a connection between their node and the application.
+
+Format for entering the Node Information:
+
+protocol://IP:port
+
+Example: ws://127.0.0.1:9944
+
+Example: wss://www.example.com
+
+Note: The "wss" protocol uses WebSocket over a secure TLS/SSL connection, while the "ws" protocol uses an unencrypted connection.
+
+## Accessing the application
+
+### Blocks Page
+
+The blocks page displays the most recent block details, as well as the name of the validator validating a particular block, block height, block hash, and the block's timestamp.
+
+![image]()
