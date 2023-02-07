@@ -66,3 +66,72 @@ This is a guide for setting up a full node for the Babylon system.
 
 ### Initialize the node directory
 
+First, initialize a node configuration directory under `~/.babylond`. The `$NODENAME` variable specifies the name you aim to give your node.
+
+```bash
+babylond init $NODENAME --chain-id bbn-test-1
+```
+
+Then, retrieve the genesis file and place it in the node directory:
+
+```bash
+wget https://github.com/babylonchain/networks/raw/main/bbn-test1/genesis.tar.bz2
+tar -xjf genesis.tar.bz2 && rm genesis.tar.bz2
+mv genesis.json ~/.babylond/config/genesis.json
+```
+
+### Add seed nodes and persistent peers
+
+Edit the configuration file at `~/.babylond/config/config.toml` and modify the `seeds` and `persistent_peers` attributes to contain appropriate seeds and peers of your choice. The full list of Babylon approved seeds and peers can be found under the [bbn-test-1 network info](https://github.com/ksalab/nodes-manual/new/main/node#network-information) page.
+
+Edit the configuration file at `~/.babylond/config/app.toml` and modify the `btc-network` and `btc-tag` attributes to contain the BTC network parameters specified in the [bbn-test-1 network info](https://github.com/ksalab/nodes-manual/new/main/node#network-information) page.
+
+### Setup cosmovisor
+
+To install the latest version of Cosmovisor
+
+```bash
+go install cosmossdk.io/tools/cosmovisor/cmd/cosmovisor@latest
+```
+
+Create the necessary directories
+
+```bash
+mkdir -p ~/.babylond
+mkdir -p ~/.babylond/cosmovisor
+mkdir -p ~/.babylond/cosmovisor/genesis
+mkdir -p ~/.babylond/cosmovisor/genesis/bin
+mkdir -p ~/.babylond/cosmovisor/upgrades
+```
+
+Copy the babylond binary into the `cosmovisor/genesis` folder
+
+```bash
+cp $GOPATH/bin/babylond ~/.babylond/cosmovisor/genesis/bin/babylond
+```
+
+Setup a cosmovisor service:
+
+```bash
+sudo tee /etc/systemd/system/babylond.service > /dev/null <<EOF
+[Unit]
+Description=Babylon daemon
+After=network-online.target
+
+[Service]
+User=$USER
+ExecStart=$(which cosmovisor) run start --x-crisis-skip-assert-invariants
+Restart=always
+RestartSec=3
+LimitNOFILE=infinity
+
+Environment="DAEMON_NAME=babylond"
+Environment="DAEMON_HOME=${HOME}/.babylond"
+Environment="DAEMON_RESTART_AFTER_UPGRADE=true"
+Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=false"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
