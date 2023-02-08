@@ -345,3 +345,59 @@ go run $VIGILANTE_PATH/cmd/main.go monitor \
          --config $VIGILANTE_PATH/vigilante.yml
 ```
 
+## Deploy Vigilante Using Docker
+
+### Reporter
+
+Initially, build a Docker image named `babylonchain/vigilante-reporter`
+
+```bash
+p sample-vigilante-docker.yml $VIGILANTE_PATH/vigilante.yml
+make reporter-build
+```
+
+Afterwards, run the above image and attach the directories that contain the configuration for Babylon, Bitcoin, and the vigilante.
+
+```bash
+docker run --rm \
+         -v $TESTNET_PATH/bitcoin:/bitcoin \
+         -v $BABYLON_NODE_PATH:/babylon \
+         -v $VIGILANTE_PATH:/vigilante \
+         babylonchain/vigilante-reporter
+```
+
+### Submitter
+
+Follow the same steps as above, but with the `babylonchain/vigilante-submitter` Docker image.
+
+```bash
+docker run --rm \
+         -v $TESTNET_PATH/bitcoin:/bitcoin \
+         -v $BABYLON_NODE_PATH:/babylon \
+         -v $VIGILANTE_PATH:/vigilante \
+         babylonchain/vigilante-submitter
+```
+
+### Monitor
+
+Follow the same steps as above, but with the `babylonchain/vigilante-monitor` Docker image.
+
+```bash
+docker run --rm \
+         -v $TESTNET_PATH/bitcoin:/bitcoin \
+         -v $BABYLON_NODE_PATH:/babylon \
+         -v $VIGILANTE_PATH:/vigilante \
+         babylonchain/vigilante-monitor
+```
+
+### buildx
+
+The above Dockerfiles are also compatible with Docker's [buildx feature](https://docs.docker.com/desktop/multi-arch/) that allows multi-architectural builds. To have a multi-architectural build,
+
+```bash
+docker buildx create --use
+make reporter-buildx  # for the reporter
+make submitter-buildx # for the submitter
+make monitor-buildx # for the monitor
+```
+
