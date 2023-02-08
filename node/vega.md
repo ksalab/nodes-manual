@@ -54,3 +54,47 @@ It will then prompt you to **input a passphrase**, and then **confirm that passp
 >
 > **Your recovery phrase is only shown once ever and cannot be recovered. DO NOT SHARE YOUR RECOVERY PHRASE**.
 
+### Choose a network
+
+If you want to interact with the Token dApp or Vega Console, you'll need to import network configuration for the network(s) you want to connect to.
+
+#### Import networks
+Import the following network configurations:
+
+- Mainnet network (run by validators): [mainnet1.toml](https://raw.githubusercontent.com/vegaprotocol/networks/master/mainnet1/mainnet1.toml)
+- Fairground network: [fairground.toml](https://raw.githubusercontent.com/vegaprotocol/networks-internal/main/fairground/vegawallet-fairground.toml)
+
+> INFO
+> 
+> To update your networks list, see [manage networks](https://docs.vega.xyz/mainnet/tools/vega-wallet/cli-wallet/latest/guides/manage-networks#update-networks) for instructions.
+
+#### Import networks from URL
+
+Use the following command to import from URL.
+
+The URL used below is for mainnet, update the URL if you want to import a different network.
+
+```bash
+./vegawallet network import \
+  --from-url https://raw.githubusercontent.com/vegaprotocol/networks/master/mainnet1/mainnet1.toml
+```
+
+#### Import networks from file
+
+Alternatively you can import a network list from a text file. You can use the '.toml' files linked above as a template for your networks list. Use the following command to import from file:
+
+```bash
+./vegawallet network import --from-file "PATH_TO_FILE"
+```
+
+> INFO
+> 
+> Each network has a default name. You can rename the network using the `--with-name` flag.
+
+#### List imported networks
+
+To see the names of the networks you imported, run the following command:
+
+```bash
+./vegawallet network list
+```
