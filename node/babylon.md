@@ -139,7 +139,7 @@ WantedBy=multi-user.target
 EOF
 ```
 
-###Start the node
+### Start the node
 
 ```bash
 sudo -S systemctl daemon-reload
@@ -193,5 +193,155 @@ Validators are required to have funds for two reasons:
 > 
 > Currently, validators can only use the `test` keyring backend. In the future, Babylon will support other types of encrypted backends provided by the Cosmos SDK for validators.
 
-The [Getting Testnet Tokens]() page contains detailed instructions on how to create a keyring and get funds for it through a faucet.
+The [Getting Testnet Tokens](https://github.com/ksalab/nodes-manual/blob/main/node/babylon.md#getting-testnet-tokens) page contains detailed instructions on how to create a keyring and get funds for it through a faucet.
+
+### Create a BLS key
+
+Validators are expected to submit a BLS signature at the end of each epoch. To do that, a validator needs to have a BLS key pair to sign information with.
+
+Using the address that you created on the previous step (`$ADDR` variable):
+
+```bash
+babylond create-bls-key $ADDR
+```
+
+This command will create a BLS key and add it to the `~/.babylond/config/priv_validator_key.json`. This is the same file that stores the private key that the validator uses to sign blocks. Please ensure that this file is secured properly.
+
+After creating a BLS key, you need to restart your node to load this key into memory. If you followed the [setting up a node guide](https://github.com/ksalab/nodes-manual/new/main/node#build-and-install-babylon), you would have to
+
+```bash
+sudo systemctl stop babylond
+sudo systemctl start babylond
+```
+
+### Modify the configuration
+
+A Babylon validator needs to send BLS signature transactions at the end of each epoch. This process is done automatically through the Babylon codebase which identifies which key to use from the `~/.babylond/config/client.toml` file. Edit this file and set the keyring backend that you're using. In this guide's case:
+
+```bash
+keyring-backend = "test"
+```
+
+Furthermore, you need to specify the name of the key that the validator will be using to submit BLS signature transactions under the `~/.babylond/config/app.toml` file. Edit this file and set the key name to the one that holds funds on your keyring:
+
+```bash
+key-name = "val-key" # replace with your key name
+```
+
+Finally, it is strongly recommended to modify the timeout_commit value under `~/.babylond/config/config.toml`. This value specifies how long a validator will wait before commiting a block before starting on a new height. More information can be found here. Given that Babylon aims to have a 10 second time between blocks, set this value to:
+
+```bash
+timeout_commit = "10s"
+```
+
+### Create the validator
+
+Contrary to a vanilla Cosmos SDK chain, a validator for Babylon is created through the `babylond tx checkpointing create-validator` command. This command expects that a BLS validator key exists under the `~/.babylond/config/priv_validator_key.json` and has the same parameters as the `babylond tx staking create-validator` command.
+
+To create the validator (using sample parameters):
+
+```bash
+# Note the variables
+# - $AMOUNT in ubbn, e.g. 10000000ubbn
+# - $CHAIN_ID the chain ID
+# - $VAL_KEY the name of the key (with a test keyring backend) used for the validator
+babylond tx checkpointing create-validator \
+    --amount="$AMOUNT" \
+    --pubkey=$(babylond tendermint show-validator) \
+    --moniker="My Validator" \
+    --chain-id=$CHAIN_ID \
+    --gas="auto" \
+    --gas-adjustment=1.2 \
+    --gas-prices="0.0025ubbn" \
+    --keyring-backend=test \
+    --from=$VAL_KEY \
+    --commission-rate="0.10" \
+    --commission-max-rate="0.20" \
+    --commission-max-change-rate="0.01" \
+    --min-self-delegation="1"
+```
+
+> INFO
+> 
+> Note: In order to become an active validator, you need to have more `ubbn` tokens bonded than the last validator ordered by the tokens bonded (or the validator set to not be full) as well as have at least `10000000ubbn` bonded.
+
+### Verify your validator
+
+On the Babylon system, one can become a validator only after an epoch ends. For the testnet, an epoch lasts for around 30 minutes.
+
+To verify that you have become a validator, first find your validator address:
+
+```bash
+babylond keys show $KEYNAME -a --bech val
+```
+
+where `$KEYNAME` is the name of the key that you used for the self-delegation (e.g. `val-key` on our example). This will return an address which you can use as the `$ADDR` variable to perform the following query:
+
+```bash
+babylond query staking validator $ADDR
+```
+
+If all goes well, you should see a response indicating the parameters that you specified on the `create-validator` transaction.
+
+After the epoch ends and if you have enough stake to be an active validator, performing this query will return you a status `BOND_STATUS_BONDED`. Congrats! You are now a validator on the Babylon system.
+
+## Becoming a Babylon Vigilante
+
+Vigilante programs are standalone programs that are run along-side with Babylon nodes. People run a vigilante program in three modes, `reporter`, `submitter`, and `monitor`, each responsible to different aspects to the security of the Babylon network.
+
+### Prerequisites
+
+First we need to have the access to a synced Babylon full node and a synced BTC full node. To run a BTC full node, please follow the [instructions of running a `bitcoind` full node]() or the [instructions of running a `btcd` full node]() (an alternative full node bitcoin implementation written in Golang). We support the connections to both. To run a Babylon full node, please follow this [guide](https://github.com/ksalab/nodes-manual/new/main/node#build-and-install-babylon).
+
+We specify the following paths:
+
+```bash
+BABYLON_PATH="path_where_babylon_is_built" # example: $HOME/Projects/Babylon/babylon
+VIGILANTE_PATH="root_vigilante_dir" # example: $HOME/Projects/Babylon/vigilante
+TESTNET_PATH="path_where_the_testnet_files_will_be_stored" # example: $HOME/Projects/Babylon/babylon/.testnet
+```
+
+### Configuration
+
+Create a directory which will store the vigilante configuration, copy the sample vigilante configuration into a `vigilante.yml` file, and adapt it to the specific requirements.
+
+Currently, the vigilante configuration should be edited manually. In the future, we will add functionality for generating this file through a script. For Docker deployments, we have created the `sample-vigilante-docker.yaml` file which contains a configuration that will work out of this box for this guide.
+
+```bash
+cp sample-vigilante.yml $VIGILANTE_PATH/vigilante.yml
+nano $VIGILANTE_PATH/vigilante.yml # edit the config file to replace $TESTNET instances
+```
+
+## Deploy Vigilante Locally
+
+### Reporter
+
+Run the vigilante reporter
+
+```bash
+go run $VIGILANTE_PATH/cmd/main.go reporter \
+         --config $VIGILANTE_PATH/vigilante.yml \
+         --babylon-key $BABYLON_KEY_DIR
+```
+
+where `$BABYLON_KEY_DIR` stores the keyring that will be used to submit BTC headers and checkpoints to Babylon.
+
+### Submitter
+
+Similarly, run the vigilante submitter
+
+```bash
+go run $VIGILANTE_PATH/cmd/main.go submitter \
+         --config $VIGILANTE_PATH/vigilante.yml
+```
+
+### Monitor
+
+The monitor mode requires the genesis file of Babylon as an additional parameter, which is stored under $BABYLON_NODE_PATH/config/genesis.json. So, run the vigilante monitor
+
+```bash
+go run $VIGILANTE_PATH/cmd/main.go monitor \
+         --genesis $BABYLON_NODE_PATH/config/genesis.json
+         --config $VIGILANTE_PATH/vigilante.yml
+```
 
