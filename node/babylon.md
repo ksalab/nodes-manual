@@ -114,7 +114,7 @@ Copy the babylond binary into the `cosmovisor/genesis` folder
 cp $GOPATH/bin/babylond ~/.babylond/cosmovisor/genesis/bin/babylond
 ```
 
-Setup a cosmovisor service:
+Setup a cosmovisor service
 
 ```bash
 sudo tee /etc/systemd/system/babylond.service > /dev/null <<EOF
@@ -138,4 +138,60 @@ Environment="DAEMON_ALLOW_DOWNLOAD_BINARIES=false"
 WantedBy=multi-user.target
 EOF
 ```
+
+###Start the node
+
+```bash
+sudo -S systemctl daemon-reload
+sudo -S systemctl enable babylond
+sudo -S systemctl start babylond
+```
+
+You can check the status of the node by running
+
+```bash
+systemctl status babylond
+```
+
+## Getting Testnet Tokens
+
+In this guide we will go through how you can create a keyring and request for tokens through the Babylon testnet faucet.
+
+### Create a keyring
+
+> NOTE
+> 
+> Currently, validators can only use the `test` keyring backend because they need to automatically submit transactions containing BLS signatures. In the future, Babylon will support other types of encrypted backends provided by the Cosmos SDK for validators.
+
+One can create a keyring through the `babylond keys add` command. Full specification for this command can be found under the [CLI docs](https://docs.babylonchain.io/docs/cli/babylond/keys/babylondkeysdd).
+
+```bash
+# Replace the --keyring-backend argument with a backend of your choice
+babylond --keyring-backend test keys add my-key
+```
+
+This will output an address and a memo. Record the memo as it is the only way to recover your key if it gets lost.
+
+### Request funds from the Babylon testnet faucet
+
+This can be accomplished by going to the Babylon [testnet faucet](https://faucet.testnet.babylonchain.io/) page to request funds by providing the address you created before.
+
+## Becoming a Validator
+
+In this guide we are going to go through the steps for someone to become a validator.
+
+Prerequisites: Having a full node setup and synced by following this [guide](https://github.com/ksalab/nodes-manual/new/main/node#build-and-install-babylon)
+
+### Create a Keyring and Get Funds
+
+Validators are required to have funds for two reasons:
+
+- They need to provide a self delegation
+- They need to pay for transaction fees for submitting BLS signature transactions
+
+> NOTE
+> 
+> Currently, validators can only use the `test` keyring backend. In the future, Babylon will support other types of encrypted backends provided by the Cosmos SDK for validators.
+
+The [Getting Testnet Tokens]() page contains detailed instructions on how to create a keyring and get funds for it through a faucet.
 
