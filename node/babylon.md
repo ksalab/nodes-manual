@@ -86,6 +86,10 @@ Edit the configuration file at `~/.babylond/config/config.toml` and modify the `
 
 Edit the configuration file at `~/.babylond/config/app.toml` and modify the `btc-network` and `btc-tag` attributes to contain the BTC network parameters specified in the [bbn-test-1 network info](https://github.com/ksalab/nodes-manual/new/main/node#network-information) page.
 
+> Note
+>
+> Addictional [peers](https://polkachu.com/testnets/babylon/peers)
+
 ### Setup cosmovisor
 
 To install the latest version of Cosmovisor
