@@ -117,6 +117,25 @@ sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uandr\"/" $HOME/.a
 coming soon...
 ```
 
+### Create wallet
+
+```bash
+echo "export WALLET=wallet" >> $HOME/.bash_profile
+source $HOME/.bash_profile
+```
+
+#### Add New Key
+
+```bash
+andromedad keys add $WALLET
+```
+
+#### Recover Existing Key
+
+```bash
+andromedad keys add $WALLET  --recover
+```
+
 ### Download Snapshot
 
 ```bash
@@ -134,3 +153,47 @@ sudo systemctl start andromedad
 ```bash
 sudo journalctl -u andromedad -f -o cat
 ```
+
+### Create New Validator
+
+```bash
+andromedad tx staking create-validator \
+--amount=100000uandr \
+--pubkey=$(andromedad tendermint show-validator) \
+--moniker="$NODENAME" \
+--identity="YOUR_KEYBASE_ID" \
+--details="The truth is out there.." \
+--website="YOUR_WEBSITE_URL"
+--chain-id=galileo-3 \
+--commission-rate=0.10 \
+--commission-max-rate=0.20 \
+--commission-max-change-rate=0.10 \
+--min-self-delegation=1 \
+--from=$WALLET
+--gas-prices=0.1uandr \
+--gas-adjustment=1.5 \
+--gas=auto \
+-y
+```
+
+> WARNING
+>
+> Don't forget to backup your priv_validator_key.json !!!
+
+### Edit Existing Validator
+
+```bash
+andromedad tx staking edit-validator \
+--new-moniker="$NODENAME" \
+--identity="YOUR_KEYBASE_ID" \
+--details="The truth is out there.." \
+--website="YOUR_WEBSITE_URL"
+--chain-id=galileo-3 \
+--commission-rate=0.1 \
+--from=$WALLET \
+--gas-prices=0.1uandr \
+--gas-adjustment=1.5 \
+--gas=auto \
+-y
+```
+
