@@ -62,6 +62,22 @@ wget https://github.com/quasar-finance/questnet/blob/main/v03/definitive-genesis
 sudo systemctl start quasard
 ```
 
+#### Config pruning, set minimum gas price, enable prometheus and reset chain data
+
+```bash
+pruning="custom"
+pruning_keep_recent="100"
+pruning_keep_every="0"
+pruning_interval="10"
+sed -i -e "s/^pruning *=.*/pruning = \"$pruning\"/" $HOME/.quasarnoded/config/app.toml
+sed -i -e "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"$pruning_keep_recent\"/" $HOME/.quasarnoded/config/app.toml
+sed -i -e "s/^pruning-keep-every *=.*/pruning-keep-every = \"$pruning_keep_every\"/" $HOME/.quasarnoded/config/app.toml
+sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $HOME/.quasarnoded/config/app.toml
+
+sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.quasarnoded/config/config.toml
+sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uqsr\"/" $HOME/.quasarnoded/config/app.toml
+```
+
 #### This will make the node sync its state with the chain.
 
 > **This will take several hours**
