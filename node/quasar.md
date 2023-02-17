@@ -35,6 +35,7 @@ check version
 ```bash
 echo "export PATH=$PATH:$HOME/quasar" >> ~/.bash_profile
 source ~/.bash_profile
+cd $HOME
 ```
 
 ### How to join the chain as a full node
@@ -50,12 +51,7 @@ quasarnoded init < node_moniker > --chain-id < qsr-internal-questnet-01/02/03/et
 2) Download the genesis file from the corresponding version, e.g:
 
 ```bash
-https://github.com/quasar-finance/questnet/blob/main/v03/definitive-genesis.json
-```
-
-and replace the one in the appropriate path, e.g.:
-```bash
-~/.quasarnoded/config/genesis.json
+wget https://github.com/quasar-finance/questnet/blob/main/v03/definitive-genesis.json -O $HOME/.quasarnoded/config/genesis.json
 ```
 
 3) Set the persistent_peers parameter in the `~/.quasarnoded/config/config.toml` with the ones listed in the `persistent_peers.txt` file in the repo (remove the node itself from the list if needed) example file for questnet v02
