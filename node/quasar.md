@@ -13,3 +13,58 @@ These are the suggested specs. Given we are still in the testnet phase, you may 
 Binary installation
 
 > (Currently tested in Ubuntu 22)
+
+1) Download the binary corresponding to the testnet version from here
+
+```bash
+mkdir quasar
+cd quasar
+wget https://github.com/quasar-finance/binary-release/raw/main/v0.0.2-alpha-11/quasarnoded-linux-amd64 -O quasarnoded
+```
+
+check version
+
+```bash
+./quasar version
+```
+
+> 0.0.2-alpha-11
+
+2) Put it in your desired folder (it is useful to have it in your PATH)
+
+```bash
+echo "export PATH=$PATH:$HOME/quasar" >> ~/.bash_profile
+source ~/.bash_profile
+```
+
+### How to join the chain as a full node
+
+1) Initialize the node files with
+
+```bash
+quasarnoded init < node_moniker > --chain-id < qsr-internal-questnet-01/02/03/etc >
+```
+
+> Current chain-id: `qsr-questnet-04`
+
+2) Download the genesis file from the corresponding version, e.g:
+
+```bash
+https://github.com/quasar-finance/questnet/blob/main/v03/definitive-genesis.json
+```
+
+and replace the one in the appropriate path, e.g.:
+```bash
+~/.quasarnoded/config/genesis.json
+```
+
+3) Set the persistent_peers parameter in the `~/.quasarnoded/config/config.toml` with the ones listed in the `persistent_peers.txt` file in the repo (remove the node itself from the list if needed) example file for questnet v02
+
+4) Start the quasar service. If you installed the systemd unit, it should be something like
+
+```bash
+sudo systemctl start quasard
+```
+
+
+
