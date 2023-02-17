@@ -66,5 +66,11 @@ and replace the one in the appropriate path, e.g.:
 sudo systemctl start quasard
 ```
 
+#### This will make the node sync its state with the chain.
 
+> **This will take several hours**
+
+More info [here](https://hub.cosmos.network/main/hub-tutorials/join-testnet.html)
+
+> Extra: You can promote your node to validator following this guide
 
