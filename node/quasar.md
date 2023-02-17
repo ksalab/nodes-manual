@@ -100,7 +100,7 @@ sudo systemctl start quasard
 Log
 
 ```bash
-sudo journactl -f -u quasarnoded -o cat --no-hostname
+sudo journalctl -f -u quasarnoded -o cat --no-hostname
 ```
 
 #### This will make the node sync its state with the chain.
