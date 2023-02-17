@@ -56,12 +56,6 @@ wget https://github.com/quasar-finance/questnet/blob/main/v03/definitive-genesis
 
 3) Set the persistent_peers parameter in the `~/.quasarnoded/config/config.toml` with the ones listed in the `persistent_peers.txt` file in the repo (remove the node itself from the list if needed) example file for questnet v02
 
-4) Start the quasar service. If you installed the systemd unit, it should be something like
-
-```bash
-sudo systemctl start quasard
-```
-
 #### Config pruning, set minimum gas price, enable prometheus and reset chain data
 
 ```bash
@@ -76,6 +70,12 @@ sed -i -e "s/^pruning-interval *=.*/pruning-interval = \"$pruning_interval\"/" $
 
 sed -i -e "s/prometheus = false/prometheus = true/" $HOME/.quasarnoded/config/config.toml
 sed -i -e "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"0uqsr\"/" $HOME/.quasarnoded/config/app.toml
+```
+
+4) Start the quasar service. If you installed the systemd unit, it should be something like
+
+```bash
+sudo systemctl start quasard
 ```
 
 #### This will make the node sync its state with the chain.
