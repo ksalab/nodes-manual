@@ -131,3 +131,22 @@ More info [here](https://hub.cosmos.network/main/hub-tutorials/join-testnet.html
 
 > Extra: You can promote your node to validator following this guide
 
+### Create validator (after recieving of tokens and must important sync is false)
+
+replace with your wallet name and with your validator name
+
+```bash
+quasarnoded tx staking create-validator \
+ --amount 1000000uqsr \
+ --from wallet \
+ --commission-max-change-rate "0.1" \
+ --commission-max-rate "0.2" \
+ --commission-rate "0.1" \
+ --min-self-delegation "1" \
+ --pubkey  $(quasarnoded tendermint show-validator) \
+ --moniker ksalab \
+ --identity "3BDA27DB2D54D59B" \
+ --chain-id qsr-questnet-04 \
+ -y
+```
+
