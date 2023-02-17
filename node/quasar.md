@@ -91,16 +91,36 @@ Recover Existing Key
 quasarnoded keys add $WALLET  --recover
 ```
 
+Create service
+
+```bash
+sudo tee /etc/systemd/system/quasard.service > /dev/null <<EOF
+[Unit]
+Description=quasar
+After=network-online.target
+[Service]
+User=$USER
+ExecStart=$(which quasarnoded) start
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=65535
+[Install]
+WantedBy=multi-user.target
+EOF
+```
+
 4) Start the quasar service. If you installed the systemd unit, it should be something like
 
 ```bash
-sudo systemctl start quasard
+sudo systemctl daemon-reload
+sudo systemctl enable quasard
+sudo systemctl restart quasard
 ```
 
 Log
 
 ```bash
-sudo journalctl -f -u quasarnoded -o cat --no-hostname
+sudo journalctl -f -u quasard -o cat --no-hostname
 ```
 
 #### This will make the node sync its state with the chain.
