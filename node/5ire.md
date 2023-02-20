@@ -73,7 +73,7 @@ The following steps below are for installing full nodes or validators via Docker
 **Step 1**: Download the Docker image, using the following command:
 
 ```bash
-docker pull 5irechain/5ire-thunder-node:0.10
+docker pull 5irechain/5ire-thunder-node:0.12
 ```
 
 **Step 2**: Run the Docker image
