@@ -66,3 +66,89 @@ mande-chaind init {{NODE_NAME}} --chain-id mande-testnet-1
 mande-chaind start
 ```
 
+- Make sure you have some `$MAND` in your address claimed from the faucet previously.
+- Wait for the blockchain to sync. You can check the sync status using the command
+```bash
+curl http://localhost:26657/status sync_info "catching_up": false
+```
+- Once `"catching_up"` is `false`, the sync is complete.
+
+## Register the validator
+
+Run the following command to register the validator
+
+```bash
+mande-chaind tx staking create-validator \
+--from {{KEY_NAME}} \
+--amount 0cred \
+--pubkey "$(mande-chaind tendermint show-validator)" \
+--chain-id mande-testnet-1 \
+--moniker="{{VALIDATOR_NAME}}" \
+--gas=auto --gas-adjustment=1.15
+```
+
+## Setup a Metadata profile
+
+To Improve communication with community and core team, please add the following metadata to your validator. These helps us send security and chain upgrade announcement in a clear manner
+
+```bash
+mande-chaind tx staking edit-validator \
+    --identity="keybase identity"
+    --security-contact="XXXXXXXX" \
+    --website="XXXXXXXX"
+```
+
+## Some helpful commands
+
+Query outstanding rewards:
+
+```bash
+mande-chaind query distribution validator-outstanding-rewards mandevaloper...
+```
+
+Withdraw rewards:
+
+```bash
+mande-chaind tx distribution withdraw-rewards mandevaloper... --commission --from {{KEY_NAME}} --chain-id mande-testnet-1
+```
+
+Cast/Uncast vote:
+
+- `mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote [validator_address_to_vote] [amount] [mode]`
+- `amount` can be positive or negative (make sure, -1000000000 < amount < 1000000000, otherwise there might be unexpected behaviour which will be fixed in next phase), `mode` - 1 for cast, 0 for uncast.
+- Cast Ex: `mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote mande... 10000000 1`
+- Uncast Ex: `mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote mande... 10000000 0`
+
+## Additional node performance config
+
+System requirements:
+
+- Four or more CPU cores
+- At least 100 GB of disk storage
+- At least 4 GB of RAM
+
+Increase file limit
+
+```bash
+ulimit -n 65536
+```
+
+Update ~/.mande-chain/config/config.toml
+
+- log_level = "error"
+- send_rate = 20000000
+- recv_rate = 20000000
+- max_packet_msg_payload_size = 10240
+- flush_throttle_timeout = "50ms"
+- mempool.size = 10000
+- create_empty_blocks = false
+- indexer = "null" [If you are not running explorers using same rpc]
+- persistent_peers = "ee8a1b98e931e81d32c52f0b489fa22b52778d7c@34.171.132.212:26656,6780b2648bd2eb6adca2ca92a03a25b216d4f36b@34.170.16.69:26656" [Verify]
+
+## Delete
+
+```bash
+~/.mande-chain/config/addrbook.json
+```
+
+[It will be generated freshly]
