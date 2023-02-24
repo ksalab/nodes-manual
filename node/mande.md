@@ -157,6 +157,8 @@ Update ~/.mande-chain/config/config.toml
 
 Delegate
 ```bash
-mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote [validator_address_to_vote] [amount] [mode]
+mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote [validator_wallet] [amount] [mode]
+
+# mode - 1 for cast, 0 for uncast
 ```
 
