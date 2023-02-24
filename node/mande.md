@@ -163,7 +163,7 @@ mande-chaind tx staking edit-validator --security-contact="email" --website="web
 
 ### Delegate
 ```bash
-mande-chaind --from wallet --chain-id mande-testnet-1 tx voting create-vote wallet [amount] [mode]
+mande-chaind --from [WALLET_name] --chain-id mande-testnet-1 tx voting create-vote [validator_WALLET_address_to_vote] [amount] [mode] --fees 1000mand -y
 
 # amount - number of coins
 # mode - 1 for cast, 0 for uncast
