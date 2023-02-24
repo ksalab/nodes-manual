@@ -155,7 +155,13 @@ Update ~/.mande-chain/config/config.toml
 
 ## Comands
 
-Delegate
+### Edit validator
+
+```bash
+mande-chaind tx staking edit-validator --security-contact="email" --website="website" --from wallet --fees 1000mand
+```
+
+### Delegate
 ```bash
 mande-chaind --from wallet --chain-id mande-testnet-1 tx voting create-vote wallet [amount] [mode]
 
