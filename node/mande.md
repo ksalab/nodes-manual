@@ -152,3 +152,11 @@ Update ~/.mande-chain/config/config.toml
 ```
 
 [It will be generated freshly]
+
+## Comands
+
+Delegate
+```bash
+mande-chaind --from {{KEY_NAME}} --chain-id mande-testnet-1 tx voting create-vote [validator_address_to_vote] [amount] [mode]
+```
+
